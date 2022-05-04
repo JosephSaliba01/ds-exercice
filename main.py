@@ -69,7 +69,7 @@ for index, row in least_N_popular_products.iterrows():
 print(f'Least {N_PRODUCTS} popular products:\n{least_N_popular_products}\n')
 plt.title(f"Visualization of the {N_PRODUCTS} least popular products")
 plt.xlabel('Date')
-plt.ylabel('Quantity ordered') 
+plt.ylabel('Total Sales') 
 plt.legend()
 plt.show()
 
@@ -105,6 +105,7 @@ def triple_exponential_moving_average(iterable, factor = 0.1):
         average3 += factor * (average2 / weight - average3)
         yield (3 * (average1 - average2) + average3) / weight
 
+df = df[df.YEAR_ID != 2005]
 
 product_line_df = df[df.PRODUCTLINE == top_N_popular_products.iloc[0].PRODUCTLINE][['ORDERDATE', 'SALES']]
 
@@ -123,11 +124,7 @@ plt.show()
 
 # decompose using additive model to check for trend and seasonality
 # y(t) = Trend + Seasonality + Residual
-decompose_result_mult = seasonal_decompose(x=product_line_df[product_line_df.index.year != 2005], model="additive", period=351)
-
-trend = decompose_result_mult.trend
-seasonal = decompose_result_mult.seasonal
-residual = decompose_result_mult.resid
+decompose_result_mult = seasonal_decompose(x=product_line_df, model="additive", period=687//2)
 
 decompose_result_mult.plot()
 plt.show()
